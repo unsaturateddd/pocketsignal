@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const activeExpiryBtn = document.querySelector('.expiry-btn.active');
         const expiryTime = parseInt(activeExpiryBtn.dataset.time);
         const isUp = Math.random() > 0.5;
-        const percent = Math.floor(Math.random() * 20) + 75; // 75-95%
+        const percent = Math.floor(Math.random() * 35) + 80; // 75-95%
         
         // Обновление данных
         document.getElementById('traders-percent').textContent = `${percent}%`;
@@ -115,11 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('price-chart').getContext('2d');
     
     // Генерация данных без привязки к реальным ценам
-    const labels = Array.from({length: 100}, (_, i) => '');
+    const labels = Array.from({length: 85}, (_, i) => '');
     let lastValue = 50 + Math.random() * 10; // Стартовое значение
     
     const data = labels.map(() => {
-        lastValue += Math.random() * 2 - 1; // Случайные колебания
+        lastValue += Math.random() * 3 - 1; // Случайные колебания
         return lastValue;
     });
 
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateChartDirection(chart, isUp) {
         const currentData = chart.data.datasets[0].data;
         const newValue = currentData[currentData.length - 1] + 
-                         (isUp ? Math.random() * 0.1 : -Math.random() * 0.1);
+                         (isUp ? Math.random() * 0.2 : -Math.random() * 0.2);
         
         // Сдвиг данных
         chart.data.labels.push('');
