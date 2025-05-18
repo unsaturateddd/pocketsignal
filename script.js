@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateChartDirection(chart, isUp) {
         const currentData = chart.data.datasets[0].data;
         const newValue = currentData[currentData.length - 1] + 
-                         (isUp ? Math.random() * 0.05 : -Math.random() * 0.05);
+                         (isUp ? Math.random() * 0.1 : -Math.random() * 0.1);
         
         // Сдвиг данных
         chart.data.labels.push('');
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!chart) return;
         
         const currentData = chart.data.datasets[0].data;
-        const newValue = currentData[currentData.length - 1] + (Math.random() * 0.004 - 0.002);
+        const newValue = currentData[currentData.length - 1] + (Math.random() * 0.008 - 0.004);
         
         // Сдвиг данных
         chart.data.labels.push('');
