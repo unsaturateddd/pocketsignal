@@ -176,35 +176,52 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновление направления графика
     function updateChartDirection(chart, isUp) {
-        const currentData = chart.data.datasets[0].data;
-        const newValue = currentData[currentData.length - 1] + 
-                         (isUp ? Math.random() * 0.2 : -Math.random() * 0.2);
-        
-        // Сдвиг данных
-        chart.data.labels.push('');
-        chart.data.labels.shift();
-        currentData.push(newValue);
-        currentData.shift();
-        
-        // Цвет направления
-        chart.data.datasets[0].borderColor = isUp ? '#00b894' : '#d63031';
-        
-        chart.update();
-    }
+    const steps = 30; // Количество шагов анимации
+    const duration = 2000; // Продолжительность анимации в ms
+    const stepTime = duration / steps;
+    let step = 0;
     
-    // Плавное изменение графика
-    setInterval(() => {
-        if (!chart) return;
+    // Остановить обычное обновление графика
+    clearInterval(chartUpdateInterval);
+    
+    const animate = () => {
+        if (step >= steps) {
+            // Возобновить обычное обновление после анимации
+            chartUpdateInterval = setInterval(updateChartRandomly, 2000);
+            return;
+        }
         
         const currentData = chart.data.datasets[0].data;
-        const newValue = currentData[currentData.length - 1] + (Math.random() * 0.008 - 0.004);
+        const change = isUp ? Math.random() * 3 : -Math.random() * 3;
+        const newValue = currentData[currentData.length - 1] + change;
         
-        // Сдвиг данных
         chart.data.labels.push('');
         chart.data.labels.shift();
         currentData.push(newValue);
         currentData.shift();
         
         chart.update();
-    }, 2000);
-});
+        step++;
+        setTimeout(animate, stepTime);
+    };
+    
+    animate();
+}
+
+// Замените ваш setInterval в конце кода на:
+let chartUpdateInterval;
+function updateChartRandomly() {
+    if (!chart) return;
+    
+    const currentData = chart.data.datasets[0].data;
+    const newValue = currentData[currentData.length - 1] + (Math.random() * 0.4 - 0.2);
+    
+    chart.data.labels.push('');
+    chart.data.labels.shift();
+    currentData.push(newValue);
+    currentData.shift();
+    
+    chart.update();
+}
+
+chartUpdateInterval = setInterval(updateChartRandomly, 2000);
