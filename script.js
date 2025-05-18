@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const activeExpiryBtn = document.querySelector('.expiry-btn.active');
         const expiryTime = parseInt(activeExpiryBtn.dataset.time);
         const isUp = Math.random() > 0.5;
-        const percent = Math.floor(Math.random() * 35) + 80; // 75-95%
+        const percent = Math.floor(Math.random() * 20) + 75; // 75-95%
         
         // Обновление данных
         document.getElementById('traders-percent').textContent = `${percent}%`;
@@ -115,11 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const ctx = document.getElementById('price-chart').getContext('2d');
     
     // Генерация данных без привязки к реальным ценам
-    const labels = Array.from({length: 85}, (_, i) => '');
+    const labels = Array.from({length: 100}, (_, i) => '');
     let lastValue = 50 + Math.random() * 10; // Стартовое значение
     
     const data = labels.map(() => {
-        lastValue += Math.random() * 3 - 1; // Случайные колебания
+        lastValue += Math.random() * 2 - 1; // Случайные колебания
         return lastValue;
     });
 
@@ -176,52 +176,35 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновление направления графика
     function updateChartDirection(chart, isUp) {
-    const steps = 30; // Количество шагов анимации
-    const duration = 2000; // Продолжительность анимации в ms
-    const stepTime = duration / steps;
-    let step = 0;
+        const currentData = chart.data.datasets[0].data;
+        const newValue = currentData[currentData.length - 1] + 
+                         (isUp ? Math.random() * 0.05 : -Math.random() * 0.05);
+        
+        // Сдвиг данных
+        chart.data.labels.push('');
+        chart.data.labels.shift();
+        currentData.push(newValue);
+        currentData.shift();
+        
+        // Цвет направления
+        chart.data.datasets[0].borderColor = isUp ? '#00b894' : '#d63031';
+        
+        chart.update();
+    }
     
-    // Остановить обычное обновление графика
-    clearInterval(chartUpdateInterval);
-    
-    const animate = () => {
-        if (step >= steps) {
-            // Возобновить обычное обновление после анимации
-            chartUpdateInterval = setInterval(updateChartRandomly, 2000);
-            return;
-        }
+    // Плавное изменение графика
+    setInterval(() => {
+        if (!chart) return;
         
         const currentData = chart.data.datasets[0].data;
-        const change = isUp ? Math.random() * 3 : -Math.random() * 3;
-        const newValue = currentData[currentData.length - 1] + change;
+        const newValue = currentData[currentData.length - 1] + (Math.random() * 0.004 - 0.002);
         
+        // Сдвиг данных
         chart.data.labels.push('');
         chart.data.labels.shift();
         currentData.push(newValue);
         currentData.shift();
         
         chart.update();
-        step++;
-        setTimeout(animate, stepTime);
-    };
-    
-    animate();
-}
-
-// Замените ваш setInterval в конце кода на:
-let chartUpdateInterval;
-function updateChartRandomly() {
-    if (!chart) return;
-    
-    const currentData = chart.data.datasets[0].data;
-    const newValue = currentData[currentData.length - 1] + (Math.random() * 0.4 - 0.2);
-    
-    chart.data.labels.push('');
-    chart.data.labels.shift();
-    currentData.push(newValue);
-    currentData.shift();
-    
-    chart.update();
-}
-
-chartUpdateInterval = setInterval(updateChartRandomly, 2000);
+    }, 2000);
+});
